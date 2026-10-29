@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Time-Zone-Ordered Spillover Networks: code"
+version: 1.0.0
+date-released: 2026-10-29
+license: MIT
+authors:
+  - family-names: Parwani
+    given-names: Meet
+    affiliation: "School of Computer Science and Engineering (SCOPE), Vellore Institute of Technology (VIT), Vellore, India"
+  - family-names: Venu
+    given-names: Sivakumar
+    affiliation: "Department of Analytics, School of Computer Science and Engineering (SCOPE), Vellore Institute of Technology (VIT), Vellore, India"
+keywords:
+  - graph neural networks
+  - volatility forecasting
+  - volatility spillovers
+  - non-synchronous trading
+  - look-ahead bias

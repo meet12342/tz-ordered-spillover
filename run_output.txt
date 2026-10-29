@@ -1,0 +1,86 @@
+
+============================================================================
+1. Closing ranks and the clock mask  (Eqs. 8-9, Table 1)
+============================================================================
+derived ranks: {'TWSE': 1, 'NKY': 2, 'KS11': 3, 'HSI': 4, 'NIFIT': 5, 'DAX': 6, 'SX8P': 6, 'NDX': 7, 'REMX': 7, 'SOX': 7, 'GLD': None, 'UST': None}
+admitted same-day edges: 41 of 132  (68.9% removed)
+hypothesis space: 2^132 = 5.44e+39  ->  2^41 = 2.20e+12
+labelled DAGs on 12 nodes (Robinson, Eq. 10): 5.219e+26
+clock restriction is 14.4 orders of magnitude stronger than acyclicity
+mask M (rows = receiver i, cols = transmitter j):
+[[0 0 0 0 0 0 0 0 0 0 0 0]
+ [1 0 0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 0 0 0 0 0 0 0 0 0]
+ [1 1 1 0 0 0 0 0 0 0 0 0]
+ [1 1 1 1 0 0 0 0 0 0 0 0]
+ [1 1 1 1 1 0 0 0 0 0 0 0]
+ [1 1 1 1 1 0 0 0 0 0 0 0]
+ [1 1 1 1 1 1 1 0 0 0 0 0]
+ [1 1 1 1 1 1 1 0 0 0 0 0]
+ [1 1 1 1 1 1 1 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0]]
+
+============================================================================
+2. Volatility estimators and target autocorrelation  (Eqs. 1-6)
+============================================================================
+synthetic OHLC series (stochastic volatility), T = 2500
+  mean Parkinson      2.330e-02
+  mean Garman-Klass   2.503e-02
+  mean Rogers-Satchell 2.507e-02
+  ACF(1) of 21-day Yang-Zhang      : 0.994   (windowed: near 1, the rejected target)
+  ACF(1) of ln(r_on^2 + RS) target : 0.600   (daily: leaves something to forecast)
+
+============================================================================
+3. Proposition 1: theta_ij(1) = rho_ij^2  (Eqs. 36-40)
+============================================================================
+1000 random positive-definite 12x12 matrices: max |theta - rho^2| = 5.6e-16
+normalised ratio theta~_ij/theta~_ji = 1.002285;  R_j/R_i = 1.002285   (Eq. 40)
+clock classification of this H=1 matrix (Eq. 41): {'forward': np.float64(0.096), 'backward': np.float64(0.096), 'simultaneous': np.float64(0.012), 'outside': np.float64(0.122), 'backward_share': np.float64(0.502)}
+
+============================================================================
+4. TVP-VAR known-answer tests  (Eqs. 30-38, tests TC-11 to TC-13)
+============================================================================
+three-node system, node 0 drives nodes 1 and 2
+  average NET: [ 55.51 -26.66 -28.86] -> largest net transmitter = node 0
+  max |row sum - 100| = 2.8e-14;  max |sum NET| = 2.1e-14
+  permutation equivariance error = 0.0e+00
+  constant-parameter data, kappa1=1.00: max |a_t - 0.5| after burn-in = 0.059
+  constant-parameter data, kappa1=0.99: max |a_t - 0.5| after burn-in = 0.165
+  jump 0.10 -> 0.80 at t=1000: filtered a_t mean before = 0.09, after = 0.80
+
+============================================================================
+5. Graph forecaster and the three-condition leakage gate  (Eqs. 11-25)
+============================================================================
+parameters: ordered = 8641, unconstrained = 8641  (capacity parity)
+tau schedule (Eq. 16): [2.0, 1.168, 0.682, 0.4]
+[leakage] all three conditions satisfied (noise R2=-0.0044)
+TC-17 injected leak detected, run halted -> untrained model scores R2=0.9965 on pure noise
+[leakage] all three conditions satisfied (noise R2=-0.0597)
+[leakage] all three conditions satisfied (noise R2=-0.0476)
+  ordered      : RMSE = 0.6016  (epochs used, last fold: 41)
+  unconstrained: RMSE = 0.5997  (epochs used, last fold: 39)
+  naive 0.5*y_(t-1) RMSE = 0.6359
+  DM (ordered vs unconstrained): stat = 1.83, p = 0.067
+  note: demonstration on synthetic data; the paper's numbers come from the market panel
+
+============================================================================
+6. Nested ablation arithmetic  (Eqs. 50-51, Table 8)
+============================================================================
+gains (pp): {'no_graph': 0.0, 'shuffled': 3.21, 'strict': 5.61, 'plus_simultaneous': 8.92, 'unconstrained': 11.49}
+real signal S = 8.27 pp; split: {'capacity': 3.21, 'admissible': 2.39, 'simultaneous_continuous': 3.32, 'look_ahead': 2.56}
+binary contrast share = 71.1%, nested share = 31.0%, factor = 2.29
+HAR improvement: ordered 5.3%, unconstrained 11.8%
+
+============================================================================
+7. Synthetic structure recovery with and without the order  (Eqs. 52-57)
+============================================================================
+method                                    AUROC      F1  violation
+Thresholded correlation          0.844 ± 0.128   0.450      0.479
+NOTEARS                          0.753 ± 0.110   0.237      0.638
+Correlation + order              0.953 ± 0.060   0.712      0.000
+NOTEARS + order                  0.969 ± 0.062   0.933      0.000
+NOTEARS + 40% corrupted order    0.863 ± 0.142   0.764      0.131
+note: fresh synthetic draws from this script; the paper's Table 12 used the project's own seeds
+
+all sections completed in 33 s
