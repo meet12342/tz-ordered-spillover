@@ -1,0 +1,11 @@
+{
+  "title": "Time-Zone-Ordered Spillover Networks: code",
+  "upload_type": "software",
+  "description": "Python code for the paper 'Time-Zone-Ordered Spillover Networks for Forecasting Volatility in Global Technology Equities'. Includes the clock mask, the masked latent-graph forecaster, the leakage gate, the TVP-VAR connectedness estimator, the evaluation tests, the synthetic study and the figure script.",
+  "creators": [
+    {"name": "Parwani, Meet", "affiliation": "School of Computer Science and Engineering (SCOPE), Vellore Institute of Technology (VIT), Vellore, India"},
+    {"name": "Venu, Sivakumar", "affiliation": "Department of Analytics, School of Computer Science and Engineering (SCOPE), Vellore Institute of Technology (VIT), Vellore, India"}
+  ],
+  "license": "MIT",
+  "keywords": ["graph neural networks", "volatility forecasting", "volatility spillovers", "non-synchronous trading", "look-ahead bias"]
+}
